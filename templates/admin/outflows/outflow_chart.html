@@ -1,0 +1,128 @@
+<!-- templates/admin/outflows/outflow_chart.html -->
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<style>
+    .chart-container {
+        padding: 30px;
+        margin: 30px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        height: 70vh;  /* 70% da altura da viewport */
+        width: 90%;   /* 90% da largura disponível */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Ajusta o container principal do admin para largura total */
+    #content {
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    /* Remove padding desnecessário do container principal */
+    #container {
+        padding: 0 !important;
+    }
+
+    /* Ajusta o título para ficar mais proeminente */
+    .chart-title {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chart-container">
+    <h1 class="chart-title">Dashboard de Movimentação de Saídas</h1>
+    <canvas id="outflowChart"></canvas>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('{% url "admin:outflows_outflow_data" %}')
+        .then(response => response.json())
+        .then(data => {
+            new Chart(document.getElementById('outflowChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.daily.labels,
+                    datasets: [{
+                        label: 'Quantidade de Saídas por Data',
+                        data: data.daily.data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        barThickness: 'flex',  // Ajusta automaticamente a largura das barras
+                        maxBarThickness: 50    // Limita a largura máxima das barras
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Movimentação de Saídas por Data',
+                            font: {
+                                size: 20,
+                                weight: 'bold'
+                            },
+                            padding: 20
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Quantidade',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Data',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+});
+</script>
+{% endblock %}
