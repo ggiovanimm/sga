@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-8loho^h1u^aj7gv1z$)*s5$++=j7z+^sn86asgy+@t#%z@acun
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sgalmoxarifado.pythonanywhere.com']
 
 
 # Application definition
@@ -66,7 +67,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,6 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -150,11 +152,11 @@ JAZZMIN_SETTINGS = {
     ],
 
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    'site_title': 'SGA - IA',
+    'site_title': 'SGAlmoxarifado',
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    'site_header': 'SGA - IA',
+    'site_header': 'SGAlmoxarifado',
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    'site_brand': 'SGA - IA',
+    'site_brand': 'SGAlmoxarifado',
 
     # Use um ícone do FontAwesome como classe CSS
     # 'site_logo_class': 'fas fa-s',
@@ -182,7 +184,7 @@ JAZZMIN_SETTINGS = {
     'show_ui_builder': False,
     
     # Welcome text on the login screen
-    "welcome_sign": "Bem vindo ao SGA - Instituto Auxiliadora."
+    "welcome_sign": "Bem vindo ao SGA - Almoxarifado."
     }
 
 JAZZMIN_UI_TWEAKS = {

@@ -1,7 +1,9 @@
 import csv
 import io
 from django.contrib import admin, messages
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import path, reverse
+from .views import OutflowChartView, get_outflow_data
 # from django.utils.html import format_html
 from .models import Outflow
 from reportlab.lib.pagesizes import A4
@@ -19,7 +21,22 @@ class OutflowAdmin(admin.ModelAdmin):
     list_display = ['product', 'employee', 'sector', 'description',  'quantity', 'created_at']
     search_fields = ['product__title', 'employee__name', 'sector__name', 'quantity']
     list_filter = ['created_at']
-    actions = ['generate_pdf_report', 'generate_csv_report', 'generate_chart_report']
+    actions = ['generate_pdf_report', 'generate_csv_report', 'generate_chart_report', 'view_dashboard']
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('chart/', self.admin_site.admin_view(OutflowChartView.as_view()), 
+                 name='outflow_chart'),
+            path('data/', self.admin_site.admin_view(get_outflow_data), 
+                 name='outflows_outflow_data'),  # Adicione esta linha
+        ]
+        return custom_urls + urls
+
+    def view_dashboard(self, request, queryset):
+        url = reverse('admin:outflow_chart')
+        return HttpResponseRedirect(url)
+    view_dashboard.short_description = "Visualizar Dashboard de Saídas"
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
@@ -135,4 +152,6 @@ class OutflowAdmin(admin.ModelAdmin):
         return response
 
     generate_csv_report.short_description = "Gerar exportação para CSV"
+
+    
     
