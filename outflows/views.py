@@ -5,6 +5,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.db.models.functions import TruncDate
 from .models import Outflow
+from .models import Employee  # Supondo que você tenha um modelo Employee
 
 @method_decorator(staff_member_required, name='dispatch')
 class OutflowChartView(TemplateView):

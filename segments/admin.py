@@ -1,13 +1,12 @@
 import csv
 import io
-from django.contrib import admin, messages
+from django.contrib import admin
 from django.http import HttpResponse
 from .models import Segment
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageTemplate, BaseDocTemplate, Frame
+from reportlab.platypus import Table, TableStyle, Paragraph, Spacer, PageTemplate, BaseDocTemplate, Frame
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import cm
 from reportlab.lib import colors
 from reportlab.platypus import Table, TableStyle
 from datetime import datetime
