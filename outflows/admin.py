@@ -152,6 +152,4 @@ class OutflowAdmin(admin.ModelAdmin):
         return response
 
     generate_csv_report.short_description = "Gerar exportação para CSV"
-
-    
-    
+        
