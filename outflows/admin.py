@@ -1,5 +1,8 @@
 import csv
 import io
+from django import forms
+from products.models import Product
+from employees.models import Employee
 from django.contrib import admin, messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import path, reverse
@@ -14,9 +17,41 @@ from reportlab.lib import colors
 from reportlab.platypus import Table, TableStyle
 from datetime import datetime
 
+class OutflowForm(forms.ModelForm):
+    class Meta:
+        model = Outflow
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(OutflowForm, self).__init__(*args, **kwargs)
+        # Captura o 'product_id' da URL, se disponível
+        if 'product_id' in self.initial:
+            product_id = self.initial['product_id']
+            try:
+                # Pré-seleciona o produto no formulário
+                self.fields['product'].initial = Product.objects.get(id=product_id)
+            except Product.DoesNotExist:
+                pass
+
+        # Verifica se employee_id e sector estão presentes na URL e preenche o formulário
+        if 'employee_id' in self.initial:
+            employee_id = self.initial['employee_id']
+            try:
+                self.fields['employee'].initial = Employee.objects.get(id=employee_id)
+            except Employee.DoesNotExist:
+                pass
+
+        # if 'sector' in self.initial:
+        #     sector_id = self.initial['sector']
+        #     try:
+        #         self.fields['sector'].initial = segment.objects.get(id=sector_id)
+        #     except segment.DoesNotExist:
+        #         pass
+
 
 @admin.register(Outflow)
 class OutflowAdmin(admin.ModelAdmin):
+    form = OutflowForm
     list_display = ['product', 'employee', 'sector', 'description',  'quantity', 'created_at']
     search_fields = ['product__title', 'employee__name', 'sector__name', 'quantity']
     list_filter = ['created_at']

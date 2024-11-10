@@ -1,7 +1,8 @@
 import csv
 import io
 from django.contrib import admin, messages
-from django.http import HttpResponse
+from django.urls import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Employee
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
@@ -16,7 +17,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     list_display =['name', 'segment', 'position', 'cpf', 'email']
     search_fields = ['name', 'cpf']
     list_filter = ['segment']
-    actions = ['generate_pdf_report', 'generate_csv_report']
+    actions = ['fill_outflow_form', 'generate_pdf_report', 'generate_csv_report']
 
 
 
@@ -126,3 +127,18 @@ class EmployeeAdmin(admin.ModelAdmin):
         return response
 
     generate_csv_report.short_description = "Gerar exportação para CSV"
+
+    def fill_outflow_form(self, request, queryset):
+        # Verifica se apenas um funcionário foi selecionado
+        if queryset.count() != 1:
+            self.message_user(request, "Por favor, selecione apenas um funcionário para preencher no formulário de saída.", level=messages.WARNING)
+            return HttpResponseRedirect(request.get_full_path())
+
+        # Obtém o funcionário selecionado
+        employee = queryset.first()
+        
+        # Gera a URL para o formulário de saída com os dados do funcionário preenchidos
+        url = reverse('admin:outflows_outflow_add') + f'?employee_id={employee.id}&sector={employee.segment.id}'
+        return HttpResponseRedirect(url)
+
+    fill_outflow_form.short_description = "Abrir no formulário de saída"
