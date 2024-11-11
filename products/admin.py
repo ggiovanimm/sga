@@ -241,7 +241,7 @@ class ProductAdmin(admin.ModelAdmin):
         if queryset.count() == 1:
             product = queryset.first()
             # Aqui você cria a URL para o formulário de saída, passando o ID do produto
-            url = reverse('admin:outflows_outflow_add') + f'?product_id={product.id}'
+            url = reverse('admin:outflows_outflow_add') + f'?product_id={product.id}&description={product.description}'
             return HttpResponseRedirect(url)
         else:
             self.message_user(request, "Por favor, selecione apenas um produto para esta ação.", messages.WARNING)
