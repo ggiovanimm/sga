@@ -19,7 +19,7 @@ class Outflow(models.Model):
 
     def __str__(self):
         return str(self.product)
-
+    
     def clean(self):
         if self.pk is None:  # Novo registro
             if self.product.quantity < self.quantity:
@@ -29,6 +29,11 @@ class Outflow(models.Model):
             new_quantity = self.quantity - old_quantity
             if self.product.quantity < new_quantity:
                 raise ValidationError("Estoque insuficiente para atualizar esta saída.")
+            
+        # Validação para garantir que a quantidade seja maior que zero
+        if self.quantity <= 0:
+            raise ValidationError({'quantity': 'A quantidade deve ser maior que zero.'})
+        
 
     def save(self, *args, **kwargs):
         self.clean()

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from products.models import Product
 
 class Inflow(models.Model):
@@ -15,7 +16,15 @@ class Inflow(models.Model):
     def __str__(self):
         return str(self.product)
     
+    def clean(self):
+        # Validação para garantir que a quantidade seja maior que zero
+        if self.quantity <= 0:
+            raise ValidationError({'quantity': 'A quantidade deve ser maior que zero.'})
+    
     def save(self, *args, **kwargs):
+        # Chama o método clean() para garantir a validação antes de salvar
+        self.full_clean()
+
         # Atualizar a quantidade do produto ao salvar uma entrada
         if self.pk is None:  # Verifica se é um novo registro
             self.product.quantity += self.quantity

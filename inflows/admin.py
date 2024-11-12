@@ -1,7 +1,10 @@
 import csv
 import io
 from django.contrib import admin
-from django.http import HttpResponse
+from django import forms
+from products.models import Product
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import path, reverse
 from .models import Inflow
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
@@ -11,8 +14,26 @@ from reportlab.lib import colors
 from reportlab.platypus import Table, TableStyle
 from datetime import datetime
 
+class InflowForm(forms.ModelForm):
+    class Meta:
+        model = Inflow
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(InflowForm, self).__init__(*args, **kwargs)
+        # Captura o 'product_id' da URL, se disponível
+        if 'product_id' in self.initial:
+            product_id = self.initial['product_id']
+            try:
+                # Pré-seleciona o produto no formulário
+                self.fields['product'].initial = Product.objects.get(id=product_id)
+            except Product.DoesNotExist:
+                pass
+       
+
 @admin.register(Inflow)
 class InflowAdmin(admin.ModelAdmin):
+    form = InflowForm
     list_display =['product', 'quantity', 'description', 'created_at']
     search_fields = ['product']
     list_filter = ['created_at', 'product']

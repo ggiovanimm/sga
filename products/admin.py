@@ -19,7 +19,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display =['title', 'category', 'brand', 'quantity']
     search_fields = ['title', 'category__name', 'quantity']
     list_filter = ['category', 'brand']
-    actions = ['redirect_to_outflow_form', 'generate_pdf_report', 'generate_pdf_minimo', 'generate_csv_report']
+    actions = ['redirect_to_outflow_form', 'redirect_to_inflow_form', 'generate_pdf_report', 'generate_pdf_minimo', 'generate_csv_report']
 
 
     def generate_pdf_report(self, request, queryset):
@@ -247,3 +247,15 @@ class ProductAdmin(admin.ModelAdmin):
             self.message_user(request, "Por favor, selecione apenas um produto para esta ação.", messages.WARNING)
 
     redirect_to_outflow_form.short_description = "Abrir no formulário de saída"
+
+    # Ação personalizada para abrir o formulário de entrada
+    def redirect_to_inflow_form(self, request, queryset):
+        if queryset.count() == 1:
+            product = queryset.first()
+            # Aqui você cria a URL para o formulário de saída, passando o ID do produto
+            url = reverse('admin:inflows_inflow_add') + f'?product_id={product.id}&description={product.description}'
+            return HttpResponseRedirect(url)
+        else:
+            self.message_user(request, "Por favor, selecione apenas um produto para esta ação.", messages.WARNING)
+
+    redirect_to_inflow_form.short_description = "Abrir no formulário de entrada"

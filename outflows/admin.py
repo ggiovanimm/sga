@@ -40,14 +40,7 @@ class OutflowForm(forms.ModelForm):
                 self.fields['employee'].initial = Employee.objects.get(id=employee_id)
             except Employee.DoesNotExist:
                 pass
-
-        # if 'sector' in self.initial:
-        #     sector_id = self.initial['sector']
-        #     try:
-        #         self.fields['sector'].initial = segment.objects.get(id=sector_id)
-        #     except segment.DoesNotExist:
-        #         pass
-
+       
 
 @admin.register(Outflow)
 class OutflowAdmin(admin.ModelAdmin):
