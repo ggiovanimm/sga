@@ -71,7 +71,6 @@ class OutflowAdmin(admin.ModelAdmin):
         if obj.product.quantity <= 3:
             messages.warning(request, f"Aviso: O estoque mínimo foi atingido para o produto {obj.product}. Quantidade atual: {obj.product.quantity}")
 
-
     def generate_pdf_report(self, request, queryset):
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="relatorio_saidas_{datetime.now().strftime("%Y%m%d%H%M%S")}.pdf"'
