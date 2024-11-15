@@ -39,8 +39,7 @@ class OutflowForm(forms.ModelForm):
             try:
                 self.fields['employee'].initial = Employee.objects.get(id=employee_id)
             except Employee.DoesNotExist:
-                pass
-       
+                pass       
 
 @admin.register(Outflow)
 class OutflowAdmin(admin.ModelAdmin):
