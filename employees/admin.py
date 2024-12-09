@@ -17,9 +17,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     list_display =['name', 'segment', 'position', 'cpf', 'email']
     search_fields = ['name', 'cpf']
     list_filter = ['segment']
-    actions = ['fill_outflow_form', 'generate_pdf_report', 'generate_csv_report']
-
-
+    actions = ['fill_outflow_form', 'generate_pdf_report', 'generate_csv_report']   
 
     def generate_pdf_report(self, request, queryset):
         response = HttpResponse(content_type='application/pdf')

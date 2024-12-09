@@ -49,3 +49,4 @@ class Outflow(models.Model):
         self.product.quantity += self.quantity
         self.product.save()
         super().delete(*args, **kwargs)
+        

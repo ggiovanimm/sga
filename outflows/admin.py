@@ -152,7 +152,7 @@ class OutflowAdmin(admin.ModelAdmin):
 
     generate_pdf_report.short_description = "Gerar Relatório em PDF"
 
-    def generate_csv_report(self, request, queryset):
+    def generate_csv_report(self, request, queryset): 
     # Cria um buffer de memória com codificação UTF-8 e BOM para compatibilidade com o Excel
         buffer = io.StringIO()
         writer = csv.writer(buffer, delimiter=';', quoting=csv.QUOTE_MINIMAL)
@@ -177,4 +177,3 @@ class OutflowAdmin(admin.ModelAdmin):
         return response
 
     generate_csv_report.short_description = "Gerar exportação para CSV"
-        
